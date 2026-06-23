@@ -10,6 +10,7 @@ from .. import models, schemas
 from .. database import engine, SessionLocal , get_db
 from .. import utils
 from typing import List
+from .. import oauth2
 
 router = APIRouter(
     prefix="/users",
@@ -45,3 +46,5 @@ def get_user(id: int, db: Session = Depends(get_db)):
         )
         
     return user
+
+

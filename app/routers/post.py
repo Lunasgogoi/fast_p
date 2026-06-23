@@ -33,8 +33,9 @@ def get_posts(db: Session = Depends(get_db)):
 def create_posts(
     post: schemas.PostCreate,
     db: Session = Depends(get_db),
-    get_current_user: int = Depends(oauth2.get_current_user),
+    user_id: int = Depends(oauth2.get_current_user),
 ):
+    print(user_id)
     new_post = models.Post(**post.dict())
 
     db.add(new_post)
@@ -85,3 +86,7 @@ def delete_post(id: int, db: Session = Depends(get_db)):
     
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
+
+@router.get("/test")
+def test(current_user = Depends(oauth2.get_current_user)):
+    return {"msg": "success"}
