@@ -1,7 +1,7 @@
 from .database import Base
-from sqlalchemy import TIMESTAMP, Column, Integer, String, Boolean, text
+from sqlalchemy import TIMESTAMP, ForeignKey, Column, Integer, String, Boolean, text
 from sqlalchemy.sql.expression import null
-
+from sqlalchemy.orm import relationship
 
 class Post(Base):
     __tablename__ = "posts"
@@ -13,7 +13,9 @@ class Post(Base):
     created_at = Column(
         TIMESTAMP(timezone=True), nullable=False, server_default=text("now()")
     )
+    owner_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
 
+    owner = relationship("User")
 
 class User(Base):
     __tablename__ = "users"
@@ -24,3 +26,11 @@ class User(Base):
     created_at = Column(
         TIMESTAMP(timezone=True), nullable=False, server_default=text("now()")
     )
+    
+    phone_number = Column(String)
+
+class Vote(Base):
+    __tablename__ = "votes"
+
+    post_id = Column(Integer, ForeignKey("posts.id", ondelete="CASCADE"), primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True)

@@ -2,21 +2,8 @@ from pydantic import BaseModel , ConfigDict , EmailStr
 from datetime import datetime
 from typing import Optional
 
-class PostBase(BaseModel):
-    title: str
-    content: str
-    published: bool = True
-    
-class PostCreate(PostBase):
-    pass
+from pydantic.types import conint
 
-class PostResponse(PostBase):
-    id: int
-    created_at: datetime
-
-    model_config = ConfigDict(from_attributes=True)
-    
-    
 #for users
 class UserCreate(BaseModel):
     email: EmailStr
@@ -29,6 +16,35 @@ class UserOut(BaseModel):
     
     model_config = ConfigDict(from_attributes=True)
     
+    
+
+class PostBase(BaseModel):
+    title: str
+    content: str
+    published: bool = True
+    
+    
+class PostCreate(PostBase):
+    pass
+
+class PostResponse(PostBase):
+    id: int
+    created_at: datetime
+    owner_id: int
+    owner: UserOut
+    
+    model_config = ConfigDict(from_attributes=True)
+    
+    
+class PostOut(BaseModel):
+    Post: PostResponse
+    votes: int
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+
+
 class UserLogin(BaseModel):
     email: EmailStr
     password: str
@@ -39,3 +55,11 @@ class Token(BaseModel):
     
 class TokenData(BaseModel):
     id: Optional[int] = None
+    
+class Vote(BaseModel):
+    post_id: int
+    dir: conint(le=1) # type: ignore
+    
+    
+
+    
